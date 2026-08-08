@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1f36"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+    <linearGradient id="flaskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe"/>
+      <stop offset="100%" stop-color="#4facfe"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded box -->
+  <rect width="64" height="64" rx="16" fill="url(#bgGrad)" stroke="#00f2fe" stroke-width="2" stroke-opacity="0.4"/>
+  <!-- Funnel / Flask icon matching ChemCalc2 brand -->
+  <path d="M49 14 H15 C13.2 14 12.3 16.1 13.5 17.4 L28 34 V48 C28 49.1 28.9 50 30 50 H34 C35.1 50 36 49.1 36 48 V34 L50.5 17.4 C51.7 16.1 50.8 14 49 14 Z" fill="url(#flaskGrad)"/>
+  <!-- Accent highlights -->
+  <circle cx="32" cy="42" r="2" fill="#ffffff" opacity="0.9"/>
+  <circle cx="35" cy="37" r="1.2" fill="#ffffff" opacity="0.7"/>
+</svg>
