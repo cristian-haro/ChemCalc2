@@ -1,7 +1,5 @@
 # ChemCalc2 - Calculadora de Concentración Química por Conductividad
 
-[![GitHub Pages](https://img.shields.io/badge/Despliegue-GitHub%20Pages-00f2fe?style=flat-square&logo=github)](https://github.com/)
-
 **ChemCalc2** es una aplicación web científica moderna e interactiva diseñada para calcular la concentración ($y$) de productos químicos en laboratorios e industria a partir de lecturas de conductividad del producto ($mS/cm$) y del agua base a restar ($x = \text{Cond}_{\text{químico}} - \text{Cond}_{\text{agua}}$).
 
 ---
@@ -40,38 +38,6 @@ Si se selecciona el producto **`I-202-A`** con la fórmula $y = 0,0546x - 0,1998
 3. **Cálculo de $x$**: $x = 4,25 - 0,34 = 3,91\text{ mS/cm}$
 4. **Sustitución en la ecuación**:
    $$y = (0,0546 \times 3,91) - 0,1998 = 0,213486 - 0,1998 = 0,013686$$
-
----
-
-## 🚀 Cómo Publicar la App en GitHub Pages (Paso a Paso)
-
-Para tener esta calculadora accesible desde cualquier móvil o equipo conectado a internet:
-
-### Paso 1: Crear un nuevo repositorio en GitHub
-1. Inicia sesión en [GitHub.com](https://github.com).
-2. Haz clic en el botón **+** en la esquina superior derecha y selecciona **New repository**.
-3. Nombra tu repositorio como `ChemCalc2` (puedes dejarlo público).
-4. **No** selecciones "Add a README file" ni ninguna opción adicional, y haz clic en **Create repository**.
-
-### Paso 2: Subir tu código local
-Abre la terminal en la carpeta de este proyecto y ejecuta los siguientes comandos (sustituyendo `TU_USUARIO` por tu nombre de usuario de GitHub):
-
-```bash
-git add .
-git commit -m "Initial commit - ChemCalc2 App"
-git branch -M main
-git remote add origin https://github.com/TU_USUARIO/ChemCalc2.git
-git push -u origin main
-```
-
-### Paso 3: Activar GitHub Pages
-1. En tu repositorio en GitHub, ve a la pestaña **Settings** (Configuración).
-2. En el menú de la izquierda, selecciona **Pages**.
-3. En la sección **Build and deployment > Source**, selecciona **GitHub Actions** (o la rama `main` / `/ (root)`).
-4. Guarda los cambios.
-
-En aproximadamente **1 minuto**, tu aplicación estará disponible online en la dirección:
-`https://TU_USUARIO.github.io/ChemCalc2/`
 
 ---
 
