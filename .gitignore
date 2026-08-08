@@ -1,0 +1,12 @@
+# Ignorar carpeta docs
+docs/
+
+# Archivos de sistema y entorno
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencias e IDEs (si aplica)
+node_modules/
+.vscode/
+.idea/
