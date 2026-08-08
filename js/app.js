@@ -65,17 +65,19 @@ function initEventListeners() {
     }
   });
 
-  btnReset.addEventListener('click', resetForm);
+  if (btnReset) btnReset.addEventListener('click', resetForm);
 
-  btnExportTop.addEventListener('click', exportToCSV);
-  btnExportHistory.addEventListener('click', exportToCSV);
+  if (btnExportTop) btnExportTop.addEventListener('click', exportToCSV);
+  if (btnExportHistory) btnExportHistory.addEventListener('click', exportToCSV);
 
-  btnClearHistory.addEventListener('click', () => {
-    if (confirm('¿Seguro que deseas borrar todo el historial de mediciones?')) {
-      clearHistory();
-      renderHistoryTable();
-    }
-  });
+  if (btnClearHistory) {
+    btnClearHistory.addEventListener('click', () => {
+      if (confirm('¿Seguro que deseas borrar todo el historial de mediciones?')) {
+        clearHistory();
+        renderHistoryTable();
+      }
+    });
+  }
 
   // Modal handlers si existen en el DOM
   if (btnGithubModal && modal) {

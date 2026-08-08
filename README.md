@@ -4,7 +4,7 @@
 
 ---
 
-## 🧪 Tabla de Productos Comerciales, Referencias y Fórmulas
+## Tabla de Productos Comerciales, Referencias y Fórmulas
 
 | Nombre Comercial | Ref. Técnica | Fórmula de Calibración | Estado Metrológico |
 | :--- | :--- | :--- | :--- |
@@ -30,7 +30,7 @@
 
 ---
 
-## 💡 Ejemplo Práctico
+## Ejemplo Práctico
 
 Si se selecciona el producto **`I-202-A`** con la fórmula $y = 0,0546x - 0,1998$:
 1. **Medida del químico**: $4,25\text{ mS/cm}$
@@ -41,7 +41,7 @@ Si se selecciona el producto **`I-202-A`** con la fórmula $y = 0,0546x - 0,1998
 
 ---
 
-## ⚡ Características Destacadas
+## Características Destacadas
 
 - **Diseño Científico Premium**: Tema oscuro con *glassmorphism* optimizado para laboratorios y dispositivos móviles.
 - **Formato Numérico Flexible**: Soporta tanto la coma (`,`) como el punto (`.`) como separadores decimales.
