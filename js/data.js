@@ -22,7 +22,7 @@ export const CHEMICAL_DATA = [
   { id: 'G-FORTGRAS',     code: 'I-370-A',  name: 'G-FORTGRAS',     m: 0.2452, c: 0.0099,  traceable: true },
   { id: 'G-CLOR',         code: 'I-600-GB', name: 'G-CLOR',         m: 0.1446, c: -0.0694, traceable: true },
   { id: 'G-CLOR-PLUS',    code: 'I-601-G',  name: 'G-CLOR PLUS',    m: 0.1640, c: -0.0374, traceable: true },
-  { id: 'G-ALCAFER',      code: 'I-602-G',  name: 'G-ALCAFER',      m: null,   c: null,    traceable: false, note: 'CARECE DE TRAZABILIDAD METROLÓGICA' },
+  { id: 'G-ALCAFER',      code: 'I-602-G',  name: 'G-ALCAFER',      m: 0.1229, c: 0.0318,  traceable: true },
   { id: 'G-ACID',         code: 'I-610-G',  name: 'G-ACID',         m: 0.0630, c: -0.0203, traceable: true },
   { id: 'G-ACID-PLUS',    code: 'I-611-G',  name: 'G-ACID PLUS',    m: 0.2535, c: -0.4996, traceable: true },
   { id: 'G-ACID-LT',      code: 'I-611-LT', name: 'G-ACID LT',      m: null,   c: null,    traceable: false, note: 'CARECE DE TRAZABILIDAD METROLÓGICA' }

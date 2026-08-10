@@ -23,7 +23,7 @@
 | **G-FORTGRAS** | I-370-A | $y = 0,2452x + 0,0099$ | ✅ Trazable |
 | **G-CLOR** | I-600-GB | $y = 0,1446x - 0,0694$ | ✅ Trazable |
 | **G-CLOR PLUS** | I-601-G | $y = 0,164x - 0,0374$ | ✅ Trazable |
-| **G-ALCAFER** | I-602-G | *N/A* | ⚠️ CARECE DE TRAZABILIDAD METROLÓGICA |
+| **G-ALCAFER** | I-602-G | $y = 0,1229x + 0,0318$ | ✅ Trazable |
 | **G-ACID** | I-610-G | $y = 0,063x - 0,0203$ | ✅ Trazable |
 | **G-ACID PLUS** | I-611-G | $y = 0,2535x - 0,4996$ | ✅ Trazable |
 | **G-ACID LT** | I-611-LT | *N/A* | ⚠️ CARECE DE TRAZABILIDAD METROLÓGICA |
