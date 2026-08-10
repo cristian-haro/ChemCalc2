@@ -72,6 +72,25 @@
               </div>
               <span id="traceable-badge" class="badge badge-success">Trazable</span>
             </div>
+
+            <!-- Botones de Acceso a Fichas Técnicas y Seguridad -->
+            <div id="doc-buttons" class="doc-buttons-container hidden" style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+              <button type="button" id="btn-view-ft" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Ficha Técnica (FT)
+              </button>
+              <button type="button" id="btn-view-fds" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Ficha Seguridad (FDS)
+              </button>
+            </div>
           </div>
 
           <!-- Conductividad del Químico -->
@@ -258,6 +277,35 @@
 
       <div style="margin-top: 1.5rem; text-align: right;">
         <button id="btn-close-modal-bottom" class="btn btn-primary">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Visor de Documentos (PDF) -->
+  <div id="pdf-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 980px; width: 95%; height: 90vh; display: flex; flex-direction: column; padding: 1.25rem;">
+      <div class="modal-header" style="margin-bottom: 0.75rem; flex-shrink: 0;">
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+          <h3 id="pdf-modal-title" class="modal-title" style="font-size: 1.1rem; margin: 0;">Visor de Documentación</h3>
+          <div style="display: flex; gap: 0.4rem; background: rgba(0,0,0,0.4); padding: 0.2rem; border-radius: 6px; border: 1px solid var(--border-color);">
+            <button type="button" id="pdf-tab-ft" class="pdf-tab active">Ficha Técnica (FT)</button>
+            <button type="button" id="pdf-tab-fds" class="pdf-tab">Ficha de Seguridad (FDS)</button>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <a id="pdf-open-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm" title="Abrir en pestaña nueva">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            Abrir PDF
+          </a>
+          <button type="button" id="btn-close-pdf-modal" class="modal-close">&times;</button>
+        </div>
+      </div>
+      <div style="flex: 1; position: relative; background: #1e1e1e; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color);">
+        <iframe id="pdf-frame" src="" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>
   </div>

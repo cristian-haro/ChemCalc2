@@ -88,7 +88,35 @@ function initEventListeners() {
       if (e.target === modal) modal.classList.remove('active');
     });
   }
+
+  // PDF Viewer Modal handlers
+  const btnViewFt = document.getElementById('btn-view-ft');
+  const btnViewFds = document.getElementById('btn-view-fds');
+  const pdfModal = document.getElementById('pdf-modal');
+  const btnClosePdfModal = document.getElementById('btn-close-pdf-modal');
+  const tabFt = document.getElementById('pdf-tab-ft');
+  const tabFds = document.getElementById('pdf-tab-fds');
+
+  if (btnViewFt) btnViewFt.addEventListener('click', () => openPdfModal('ft'));
+  if (btnViewFds) btnViewFds.addEventListener('click', () => openPdfModal('fds'));
+
+  if (tabFt) tabFt.addEventListener('click', () => { currentPdfType = 'ft'; renderPdfContent(); });
+  if (tabFds) tabFds.addEventListener('click', () => { currentPdfType = 'fds'; renderPdfContent(); });
+
+  if (btnClosePdfModal) btnClosePdfModal.addEventListener('click', closePdfModal);
+  if (pdfModal) {
+    pdfModal.addEventListener('click', (e) => {
+      if (e.target === pdfModal) closePdfModal();
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePdfModal();
+  });
 }
+
+let currentChemical = null;
+let currentPdfType = 'ft';
 
 /**
  * Evento al cambiar el producto químico seleccionado
@@ -102,6 +130,9 @@ function onChemicalChange() {
   const resultBox = document.getElementById('result-box');
 
   const chemical = getChemicalById(select.value);
+  currentChemical = chemical;
+
+  updateDocumentButtons(chemical);
 
   if (!chemical) {
     formulaPreview.classList.add('hidden');
@@ -134,6 +165,94 @@ function onChemicalChange() {
     
     untraceableBanner.classList.add('hidden');
     resultBox.classList.remove('hidden');
+  }
+}
+
+/**
+ * Actualiza la visibilidad y estado de los botones de Ficha Técnica y Seguridad
+ */
+function updateDocumentButtons(chemical) {
+  const docButtonsContainer = document.getElementById('doc-buttons');
+  const btnFt = document.getElementById('btn-view-ft');
+  const btnFds = document.getElementById('btn-view-fds');
+
+  if (!docButtonsContainer || !btnFt || !btnFds) return;
+
+  if (!chemical || (!chemical.ft && !chemical.fds)) {
+    docButtonsContainer.classList.add('hidden');
+    return;
+  }
+
+  docButtonsContainer.classList.remove('hidden');
+
+  btnFt.disabled = !chemical.ft;
+  btnFt.style.opacity = chemical.ft ? '1' : '0.4';
+
+  btnFds.disabled = !chemical.fds;
+  btnFds.style.opacity = chemical.fds ? '1' : '0.4';
+}
+
+/**
+ * Abre el visor modal de PDF con el tipo de documento especificado ('ft' o 'fds')
+ */
+function openPdfModal(type) {
+  const select = document.getElementById('chemical-select');
+  const chemical = getChemicalById(select.value);
+  if (!chemical) return;
+
+  currentChemical = chemical;
+  currentPdfType = type;
+
+  const pdfModal = document.getElementById('pdf-modal');
+  if (!pdfModal) return;
+
+  renderPdfContent();
+  pdfModal.classList.add('active');
+}
+
+/**
+ * Cierra el visor de PDF
+ */
+function closePdfModal() {
+  const pdfModal = document.getElementById('pdf-modal');
+  const frameEl = document.getElementById('pdf-frame');
+  if (pdfModal) pdfModal.classList.remove('active');
+  if (frameEl) frameEl.src = 'about:blank';
+}
+
+/**
+ * Renderiza el documento PDF en el iframe del modal
+ */
+function renderPdfContent() {
+  if (!currentChemical) return;
+
+  const titleEl = document.getElementById('pdf-modal-title');
+  const frameEl = document.getElementById('pdf-frame');
+  const openNewtabEl = document.getElementById('pdf-open-newtab');
+  const tabFt = document.getElementById('pdf-tab-ft');
+  const tabFds = document.getElementById('pdf-tab-fds');
+
+  const pdfPath = currentPdfType === 'ft' ? currentChemical.ft : currentChemical.fds;
+  const docTypeName = currentPdfType === 'ft' ? 'Ficha Técnica' : 'Ficha de Seguridad';
+
+  if (titleEl) titleEl.textContent = `${currentChemical.name} (${currentChemical.code}) - ${docTypeName}`;
+
+  if (tabFt) {
+    tabFt.classList.toggle('active', currentPdfType === 'ft');
+    tabFt.disabled = !currentChemical.ft;
+  }
+  if (tabFds) {
+    tabFds.classList.toggle('active', currentPdfType === 'fds');
+    tabFds.disabled = !currentChemical.fds;
+  }
+
+  if (pdfPath) {
+    const encodedPath = encodeURI(pdfPath);
+    if (frameEl) frameEl.src = encodedPath;
+    if (openNewtabEl) openNewtabEl.href = encodedPath;
+  } else {
+    if (frameEl) frameEl.src = 'about:blank';
+    if (openNewtabEl) openNewtabEl.href = '#';
   }
 }
 

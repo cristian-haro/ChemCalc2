@@ -631,6 +631,38 @@ body {
   text-decoration: underline;
 }
 
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.pdf-tab {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pdf-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pdf-tab.active {
+  background: var(--accent-cyan);
+  color: #090d16;
+}
+
+.pdf-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* Utilities */
 .hidden {
   display: none !important;
