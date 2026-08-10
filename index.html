@@ -66,11 +66,13 @@
 
             <!-- Previsualización de la Fórmula -->
             <div id="formula-preview" class="formula-box hidden">
-              <div>
-                <span class="form-label" style="margin: 0; font-size: 0.75rem;">Fórmula de Calibración</span>
+              <div class="formula-details">
+                <span class="formula-label">Fórmula de Calibración</span>
                 <div id="formula-text" class="formula-text">y = mx + c</div>
               </div>
-              <span id="traceable-badge" class="badge badge-success">Trazable</span>
+              <div class="formula-badge-container">
+                <span id="traceable-badge" class="badge badge-success">Trazable Metrológicamente</span>
+              </div>
             </div>
 
             <!-- Botones de Acceso a Fichas Técnicas y Seguridad -->
@@ -283,28 +285,28 @@
 
   <!-- Modal Visor de Documentos (PDF) -->
   <div id="pdf-modal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 980px; width: 95%; height: 90vh; display: flex; flex-direction: column; padding: 1.25rem;">
-      <div class="modal-header" style="margin-bottom: 0.75rem; flex-shrink: 0;">
-        <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
-          <h3 id="pdf-modal-title" class="modal-title" style="font-size: 1.1rem; margin: 0;">Visor de Documentación</h3>
-          <div style="display: flex; gap: 0.4rem; background: rgba(0,0,0,0.4); padding: 0.2rem; border-radius: 6px; border: 1px solid var(--border-color);">
-            <button type="button" id="pdf-tab-ft" class="pdf-tab active">Ficha Técnica (FT)</button>
-            <button type="button" id="pdf-tab-fds" class="pdf-tab">Ficha de Seguridad (FDS)</button>
+    <div class="modal-content pdf-modal-content">
+      <div class="pdf-modal-header">
+        <div class="pdf-modal-top-row">
+          <h3 id="pdf-modal-title" class="pdf-modal-title">Visor de Documentación</h3>
+          <div class="pdf-header-actions">
+            <a id="pdf-open-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm pdf-open-btn" title="Abrir en pestaña nueva">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              <span>Abrir PDF</span>
+            </a>
+            <button type="button" id="btn-close-pdf-modal" class="modal-close" aria-label="Cerrar">&times;</button>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-          <a id="pdf-open-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm" title="Abrir en pestaña nueva">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-              <polyline points="15 3 21 3 21 9"></polyline>
-              <line x1="10" y1="14" x2="21" y2="3"></line>
-            </svg>
-            Abrir PDF
-          </a>
-          <button type="button" id="btn-close-pdf-modal" class="modal-close">&times;</button>
+        <div class="pdf-tabs-container">
+          <button type="button" id="pdf-tab-ft" class="pdf-tab active">Ficha Técnica (FT)</button>
+          <button type="button" id="pdf-tab-fds" class="pdf-tab">Ficha de Seguridad (FDS)</button>
         </div>
       </div>
-      <div style="flex: 1; position: relative; background: #1e1e1e; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border-color);">
+      <div class="pdf-frame-wrapper">
         <iframe id="pdf-frame" src="" style="width: 100%; height: 100%; border: none;"></iframe>
       </div>
     </div>

@@ -235,7 +235,12 @@ function renderPdfContent() {
   const pdfPath = currentPdfType === 'ft' ? currentChemical.ft : currentChemical.fds;
   const docTypeName = currentPdfType === 'ft' ? 'Ficha Técnica' : 'Ficha de Seguridad';
 
-  if (titleEl) titleEl.textContent = `${currentChemical.name} (${currentChemical.code}) - ${docTypeName}`;
+  const isMobile = window.innerWidth <= 640;
+  if (titleEl) {
+    titleEl.textContent = isMobile 
+      ? `${currentChemical.name} (${currentChemical.code})` 
+      : `${currentChemical.name} (${currentChemical.code}) - ${docTypeName}`;
+  }
 
   if (tabFt) {
     tabFt.classList.toggle('active', currentPdfType === 'ft');
