@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChemCalc2</title>
+  <title>Tesiscalc</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" type="image/png" href="favicon.png">
   <meta name="description"
@@ -25,7 +25,7 @@
         </svg>
       </div>
       <div>
-        <h1 class="brand-title">ChemCalc2</h1>
+        <h1 class="brand-title">Tesiscalc</h1>
       </div>
     </div>
 
@@ -76,8 +76,10 @@
             </div>
 
             <!-- Botones de Acceso a Fichas Técnicas y Seguridad -->
-            <div id="doc-buttons" class="doc-buttons-container hidden" style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
-              <button type="button" id="btn-view-ft" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+            <div id="doc-buttons" class="doc-buttons-container hidden"
+              style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+              <button type="button" id="btn-view-ft" class="btn btn-secondary btn-sm"
+                style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                   <polyline points="14 2 14 8 20 8"></polyline>
@@ -86,7 +88,8 @@
                 </svg>
                 Ficha Técnica (FT)
               </button>
-              <button type="button" id="btn-view-fds" class="btn btn-secondary btn-sm" style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
+              <button type="button" id="btn-view-fds" class="btn btn-secondary btn-sm"
+                style="flex: 1; font-size: 0.8rem; padding: 0.4rem 0.6rem;">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
@@ -157,28 +160,12 @@
 
         <!-- Visualización del Valor y -->
         <div id="result-box" class="result-display">
-          <div class="result-label">Concentración Calculada (y)</div>
+          <div class="result-label">Concentración de producto</div>
           <div class="result-value">
             <span id="result-y-value">--</span>
             <span class="result-unit">conc.</span>
           </div>
           <div id="warning-text" style="color: #fbbf24; font-size: 0.8rem; margin-top: 0.5rem;" class="hidden"></div>
-        </div>
-
-        <!-- Desglose Paso a Paso -->
-        <div id="breakdown-container" class="breakdown-box">
-          <div class="breakdown-title">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            Desglose Matemático
-          </div>
-          <div id="breakdown-content">
-            <p style="color: var(--text-dim); font-size: 0.85rem;">Selecciona un producto e introduce las
-              conductividades para ver la resolución de la ecuación.</p>
-          </div>
         </div>
 
         <!-- Canvas Gráfica Recta de Calibración -->
@@ -230,59 +217,6 @@
     </section>
   </main>
 
-  <!-- Modal Guía Despliegue en GitHub -->
-  <div id="github-modal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Cómo publicar esta App en GitHub Pages</h3>
-        <button id="btn-close-modal" class="modal-close">&times;</button>
-      </div>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">
-        Puedes publicar esta calculadora online completamente gratis siguiendo estos sencillos pasos:
-      </p>
-
-      <div class="github-steps">
-        <div class="github-step">
-          <span class="github-step-num">1</span>
-          <strong>Crea un repositorio en GitHub</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-            Entra en <a href="https://github.com/new" target="_blank" rel="noopener">github.com/new</a> y crea un
-            repositorio llamado <code>ChemCalc2</code>.
-          </p>
-        </div>
-
-        <div class="github-step">
-          <span class="github-step-num">2</span>
-          <strong>Sube el código con la terminal</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-            Ejecuta estos comandos en tu terminal desde la carpeta del proyecto:
-          </p>
-          <div class="code-block">
-            git add .<br>
-            git commit -m "Initial commit - ChemCalc2 App"<br>
-            git branch -M main<br>
-            git remote add origin https://github.com/TU_USUARIO/ChemCalc2.git<br>
-            git push -u origin main
-          </div>
-        </div>
-
-        <div class="github-step">
-          <span class="github-step-num">3</span>
-          <strong>Activa GitHub Pages</strong>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-            En tu repositorio de GitHub, ve a <strong>Settings &gt; Pages</strong>. En <i>Source</i>, selecciona
-            <strong>GitHub Actions</strong> (o Branch <code>main</code> / root). ¡En un minuto estará online en
-            <code>https://tu_usuario.github.io/ChemCalc2/</code>!
-          </p>
-        </div>
-      </div>
-
-      <div style="margin-top: 1.5rem; text-align: right;">
-        <button id="btn-close-modal-bottom" class="btn btn-primary">Entendido</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Modal Visor de Documentos (PDF) -->
   <div id="pdf-modal" class="modal-overlay">
     <div class="modal-content pdf-modal-content">
@@ -290,7 +224,8 @@
         <div class="pdf-modal-top-row">
           <h3 id="pdf-modal-title" class="pdf-modal-title">Visor de Documentación</h3>
           <div class="pdf-header-actions">
-            <a id="pdf-open-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm pdf-open-btn" title="Abrir en pestaña nueva">
+            <a id="pdf-open-newtab" href="#" target="_blank" class="btn btn-secondary btn-sm pdf-open-btn"
+              title="Abrir en pestaña nueva">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                 <polyline points="15 3 21 3 21 9"></polyline>
@@ -314,7 +249,7 @@
 
   <!-- Pie de página -->
   <footer class="footer">
-    <p>ChemCalc2 &copy; 2026 - Calculadora Química Metrológica.</p>
+    <p>Tesiscalc &copy; 2026 - Calculadora Química Metrológica.</p>
   </footer>
 
   <!-- Script principal de la aplicación -->

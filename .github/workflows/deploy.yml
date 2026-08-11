@@ -1,4 +1,4 @@
-name: Deploy ChemCalc2 to GitHub Pages
+name: Deploy Tesiscalc to GitHub Pages
 
 on:
   push:

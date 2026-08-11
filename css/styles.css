@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ChemCalc2 - Stylesheet
+   Tesiscalc - Stylesheet
    Design System: Modern Laboratory & Scientific UI (Dark Theme + Glassmorphism)
    ========================================================================== */
 
@@ -43,7 +43,9 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -52,7 +54,7 @@
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
-  background-image: 
+  background-image:
     radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
     radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.06) 0%, transparent 40%);
   background-attachment: fixed;
@@ -260,7 +262,8 @@ body {
   align-items: center;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
   width: 100%;
   padding: 0.75rem 1rem;
   background: rgba(9, 13, 22, 0.8);
@@ -272,7 +275,8 @@ body {
   transition: var(--transition);
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
   outline: none;
   border-color: var(--accent-cyan);
   box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.15);
@@ -465,52 +469,6 @@ body {
 .alert-desc {
   font-size: 0.85rem;
   color: #fca5a5;
-}
-
-/* Step-by-Step Breakdown */
-.breakdown-box {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: var(--radius-sm);
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.breakdown-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-bottom: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.step-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.6rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.875rem;
-}
-
-.step-item:last-child {
-  margin-bottom: 0;
-}
-
-.step-badge {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-main);
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.step-content {
-  color: var(--text-main);
-  word-break: break-all;
 }
 
 /* Chart Canvas Container */

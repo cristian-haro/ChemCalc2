@@ -1,6 +1,6 @@
-# ChemCalc2 - Calculadora de Concentración Química por Conductividad
+# Tesiscalc - Calculadora de Concentración Química por Conductividad
 
-**ChemCalc2** es una aplicación web científica moderna e interactiva diseñada para calcular la concentración ($y$) de productos químicos en laboratorios e industria a partir de lecturas de conductividad del producto ($mS/cm$) y del agua base a restar ($x = \text{Cond}_{\text{químico}} - \text{Cond}_{\text{agua}}$).
+**Tesiscalc** es una aplicación web científica moderna e interactiva diseñada para calcular la concentración ($y$) de productos químicos en laboratorios e industria a partir de lecturas de conductividad del producto ($mS/cm$) y del agua base a restar ($x = \text{Cond}_{\text{químico}} - \text{Cond}_{\text{agua}}$).
 
 ---
 

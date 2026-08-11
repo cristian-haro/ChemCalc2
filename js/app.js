@@ -151,11 +151,6 @@ function onChemicalChange() {
     
     untraceableBanner.classList.remove('hidden');
     resultBox.classList.add('hidden');
-    document.getElementById('breakdown-content').innerHTML = `
-      <p style="color: #f87171; font-weight: 500;">
-        ⚠️ El producto comercial <strong>${chemical.name}</strong> (Ref: ${chemical.code}) carece de ecuación de calibración y trazabilidad metrológica validada. No es posible realizar el despeje matemático.
-      </p>
-    `;
     updateChart(null);
   } else {
     const cSign = chemical.c >= 0 ? `+ ${chemical.c}` : `- ${Math.abs(chemical.c)}`;
@@ -293,13 +288,11 @@ function performCalculation() {
 
   const resultYValue = document.getElementById('result-y-value');
   const warningText = document.getElementById('warning-text');
-  const breakdownContent = document.getElementById('breakdown-content');
 
   if (!result.success) {
     if (!result.isNotTraceable) {
       resultYValue.textContent = '--';
       warningText.classList.add('hidden');
-      breakdownContent.innerHTML = `<p style="color: #f87171;">${result.error}</p>`;
     }
     updateChart(null);
     return result;
@@ -314,22 +307,6 @@ function performCalculation() {
   } else {
     warningText.classList.add('hidden');
   }
-
-  // Actualizar Desglose Paso a Paso
-  breakdownContent.innerHTML = `
-    <div class="step-item">
-      <span class="step-badge">Paso 1</span>
-      <span class="step-content">Resta conductividades: <strong>${result.step1Str}</strong></span>
-    </div>
-    <div class="step-item">
-      <span class="step-badge">Paso 2</span>
-      <span class="step-content">Sustitución en fórmula: <strong>${result.step2Str}</strong></span>
-    </div>
-    <div class="step-item">
-      <span class="step-badge">Paso 3</span>
-      <span class="step-content">Resultado final: <strong style="color: var(--accent-cyan);">${result.step3Str}</strong></span>
-    </div>
-  `;
 
   // Actualizar Gráfica
   updateChart(result);
@@ -497,8 +474,5 @@ function resetForm() {
   document.getElementById('formula-preview').classList.add('hidden');
   document.getElementById('untraceable-banner').classList.add('hidden');
   document.getElementById('result-box').classList.remove('hidden');
-  document.getElementById('breakdown-content').innerHTML = `
-    <p style="color: var(--text-dim); font-size: 0.85rem;">Selecciona un producto e introduce las conductividades para ver la resolución de la ecuación.</p>
-  `;
   updateChart(null);
 }
