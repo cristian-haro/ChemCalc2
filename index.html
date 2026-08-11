@@ -57,11 +57,30 @@
         </div>
 
         <form id="calc-form" onsubmit="return false;">
-          <!-- Selección del Producto -->
+          <!-- Selector de Modo de Cálculo -->
+          <div class="mode-tabs">
+            <button type="button" id="tab-mode-conc" class="mode-tab active">
+              🧪 Calcular Concentración (y)
+            </button>
+            <button type="button" id="tab-mode-cond" class="mode-tab">
+              ⚡ Calcular Conductividad (x)
+            </button>
+          </div>
+
+          <!-- Selección de Marca y Producto -->
+          <div class="form-group">
+            <label for="brand-select" class="form-label">Marca</label>
+            <select id="brand-select" class="form-select">
+              <option value="">-- Seleccionar marca --</option>
+              <option value="gute">Gute</option>
+              <option value="iberklin">Iberklin</option>
+            </select>
+          </div>
+
           <div class="form-group">
             <label for="chemical-select" class="form-label">Producto</label>
-            <select id="chemical-select" class="form-select">
-              <option value="">-- Seleccionar producto --</option>
+            <select id="chemical-select" class="form-select" disabled>
+              <option value="">-- Seleccionar marca primero --</option>
             </select>
 
             <!-- Previsualización de la Fórmula -->
@@ -98,8 +117,8 @@
             </div>
           </div>
 
-          <!-- Conductividad del Producto -->
-          <div class="form-group">
+          <!-- Campo Modo Directo: Conductividad del Producto -->
+          <div id="group-chem-cond" class="form-group">
             <label for="chem-cond" class="form-label">Conductividad del Producto</label>
             <div class="input-wrapper">
               <input type="text" id="chem-cond" class="form-control mono" placeholder="Ej: 4,25" inputmode="decimal">
@@ -107,7 +126,16 @@
             </div>
           </div>
 
-          <!-- Conductividad del Agua -->
+          <!-- Campo Modo Inverso: Concentración Deseada del Producto -->
+          <div id="group-target-y" class="form-group hidden">
+            <label for="target-y" class="form-label">Concentración Deseada del Producto (y)</label>
+            <div class="input-wrapper">
+              <input type="text" id="target-y" class="form-control mono" placeholder="Ej: 0,05" inputmode="decimal">
+              <span class="unit-tag">conc.</span>
+            </div>
+          </div>
+
+          <!-- Conductividad del Agua (Común a ambos modos) -->
           <div class="form-group">
             <label for="water-cond" class="form-label">Conductividad del Agua (Base a restar)</label>
             <div class="input-wrapper">
@@ -158,13 +186,14 @@
           </div>
         </div>
 
-        <!-- Visualización del Valor y -->
+        <!-- Visualización del Resultado Dinámico -->
         <div id="result-box" class="result-display">
-          <div class="result-label">Concentración de producto</div>
+          <div id="result-label" class="result-label">CONCENTRACIÓN DE PRODUCTO</div>
           <div class="result-value">
             <span id="result-y-value">--</span>
-            <span class="result-unit">conc.</span>
+            <span id="result-unit" class="result-unit">conc.</span>
           </div>
+          <div id="result-sub-detail" style="font-size: 0.85rem; color: var(--accent-cyan); margin-top: 0.35rem;" class="hidden"></div>
           <div id="warning-text" style="color: #fbbf24; font-size: 0.8rem; margin-top: 0.5rem;" class="hidden"></div>
         </div>
 
@@ -197,6 +226,7 @@
           <thead>
             <tr>
               <th>Fecha / Hora</th>
+              <th>Marca</th>
               <th>Producto</th>
               <th>Cond. Producto</th>
               <th>Cond. Agua</th>
@@ -207,7 +237,7 @@
           </thead>
           <tbody id="history-tbody">
             <tr>
-              <td colspan="7" style="text-align: center; color: var(--text-dim); padding: 1.5rem;">
+              <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 1.5rem;">
                 No hay mediciones guardadas aún.
               </td>
             </tr>

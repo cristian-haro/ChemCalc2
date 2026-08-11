@@ -1,41 +1,124 @@
-import { CHEMICAL_DATA, getChemicalById } from './data.js';
-import { calculateConcentration, formatSpanishNumber, parseNumber } from './calculator.js';
+import { CHEMICAL_DATA, BRANDS, getProductsByBrand, getChemicalById } from './data.js';
+import { calculateConcentration, calculateConductivity, formatSpanishNumber, parseNumber } from './calculator.js';
 import { getHistory, saveToHistory, clearHistory, exportToCSV } from './storage.js';
 
 // Global variables
 let chartInstance = null;
+let currentChemical = null;
+let currentPdfType = 'ft';
+let currentMode = 'conc'; // 'conc' (Directo) | 'cond' (Inverso)
 
 document.addEventListener('DOMContentLoaded', () => {
-  initChemicalSelect();
-  onChemicalChange();
+  initBrandSelect();
   initEventListeners();
   renderHistoryTable();
   initChart();
 });
 
 /**
- * Rena la lista desplegable de productos
+ * Inicializa la lista desplegable de Marcas
  */
-function initChemicalSelect() {
-  const select = document.getElementById('chemical-select');
-  select.innerHTML = '<option value="">-- Seleccionar producto --</option>';
+function initBrandSelect() {
+  const brandSelect = document.getElementById('brand-select');
+  if (!brandSelect) return;
 
-  CHEMICAL_DATA.forEach(chem => {
+  brandSelect.innerHTML = '<option value="">-- Seleccionar marca --</option>';
+  BRANDS.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.id;
+    opt.textContent = b.name;
+    brandSelect.appendChild(opt);
+  });
+
+  const chemSelect = document.getElementById('chemical-select');
+  if (chemSelect) {
+    chemSelect.disabled = true;
+    chemSelect.innerHTML = '<option value="">-- Seleccionar marca primero --</option>';
+  }
+}
+
+/**
+ * Evento al cambiar la marca seleccionada
+ */
+function onBrandChange() {
+  const brandSelect = document.getElementById('brand-select');
+  const chemSelect = document.getElementById('chemical-select');
+  if (!brandSelect || !chemSelect) return;
+
+  const brandId = brandSelect.value;
+
+  if (!brandId) {
+    chemSelect.disabled = true;
+    chemSelect.innerHTML = '<option value="">-- Seleccionar marca primero --</option>';
+    onChemicalChange();
+    autoCalculate();
+    return;
+  }
+
+  const products = getProductsByBrand(brandId);
+  chemSelect.disabled = false;
+  chemSelect.innerHTML = '<option value="">-- Seleccionar producto --</option>';
+
+  products.forEach(chem => {
     const opt = document.createElement('option');
     opt.value = chem.id;
     opt.textContent = chem.traceable
-      ? `${chem.name} (Ref: ${chem.code})`
-      : `${chem.name} (Ref: ${chem.code}) - [SIN TRAZABILIDAD]`;
-    select.appendChild(opt);
+      ? chem.name
+      : `${chem.name} - [SIN TRAZABILIDAD]`;
+    chemSelect.appendChild(opt);
   });
+
+  onChemicalChange();
+  autoCalculate();
+}
+
+/**
+ * Cambia el modo de cálculo (Directo: Concentración vs Inverso: Conductividad)
+ */
+function setMode(mode) {
+  if (currentMode === mode) return;
+  currentMode = mode;
+
+  const tabConc = document.getElementById('tab-mode-conc');
+  const tabCond = document.getElementById('tab-mode-cond');
+  const groupChemCond = document.getElementById('group-chem-cond');
+  const groupTargetY = document.getElementById('group-target-y');
+  const resultLabel = document.getElementById('result-label');
+  const resultUnit = document.getElementById('result-unit');
+  const resultSubDetail = document.getElementById('result-sub-detail');
+
+  if (tabConc) tabConc.classList.toggle('active', mode === 'conc');
+  if (tabCond) tabCond.classList.toggle('active', mode === 'cond');
+
+  if (groupChemCond) groupChemCond.classList.toggle('hidden', mode === 'cond');
+  if (groupTargetY) groupTargetY.classList.toggle('hidden', mode === 'conc');
+
+  if (resultLabel) {
+    resultLabel.textContent = mode === 'conc'
+      ? 'CONCENTRACIÓN DE PRODUCTO'
+      : 'CONDUCTIVIDAD ESTIMADA DEL PRODUCTO';
+  }
+
+  if (resultUnit) {
+    resultUnit.textContent = mode === 'conc' ? 'conc.' : 'mS/cm';
+  }
+
+  if (resultSubDetail) {
+    resultSubDetail.classList.add('hidden');
+    resultSubDetail.textContent = '';
+  }
+
+  autoCalculate();
 }
 
 /**
  * Inicializa los eventos de la interfaz
  */
 function initEventListeners() {
-  const select = document.getElementById('chemical-select');
+  const brandSelect = document.getElementById('brand-select');
+  const chemSelect = document.getElementById('chemical-select');
   const chemCondInput = document.getElementById('chem-cond');
+  const targetYInput = document.getElementById('target-y');
   const waterCondInput = document.getElementById('water-cond');
   const btnCalculate = document.getElementById('btn-calculate');
   const btnReset = document.getElementById('btn-reset');
@@ -43,27 +126,37 @@ function initEventListeners() {
   const btnExportHistory = document.getElementById('btn-export-history');
   const btnClearHistory = document.getElementById('btn-clear-history');
 
-  // Modales
-  const btnGithubModal = document.getElementById('btn-github-modal');
-  const modal = document.getElementById('github-modal');
-  const btnCloseModal = document.getElementById('btn-close-modal');
-  const btnCloseModalBottom = document.getElementById('btn-close-modal-bottom');
+  // Pestañas de modo
+  const tabConc = document.getElementById('tab-mode-conc');
+  const tabCond = document.getElementById('tab-mode-cond');
 
-  select.addEventListener('change', () => {
-    onChemicalChange();
-    autoCalculate();
-  });
+  if (tabConc) tabConc.addEventListener('click', () => setMode('conc'));
+  if (tabCond) tabCond.addEventListener('click', () => setMode('cond'));
 
-  chemCondInput.addEventListener('input', autoCalculate);
-  waterCondInput.addEventListener('input', autoCalculate);
+  if (brandSelect) {
+    brandSelect.addEventListener('change', onBrandChange);
+  }
 
-  btnCalculate.addEventListener('click', () => {
-    const result = performCalculation();
-    if (result && result.success) {
-      saveToHistory(result);
-      renderHistoryTable();
-    }
-  });
+  if (chemSelect) {
+    chemSelect.addEventListener('change', () => {
+      onChemicalChange();
+      autoCalculate();
+    });
+  }
+
+  if (chemCondInput) chemCondInput.addEventListener('input', autoCalculate);
+  if (targetYInput) targetYInput.addEventListener('input', autoCalculate);
+  if (waterCondInput) waterCondInput.addEventListener('input', autoCalculate);
+
+  if (btnCalculate) {
+    btnCalculate.addEventListener('click', () => {
+      const result = performCalculation();
+      if (result && result.success) {
+        saveToHistory(result);
+        renderHistoryTable();
+      }
+    });
+  }
 
   if (btnReset) btnReset.addEventListener('click', resetForm);
 
@@ -76,16 +169,6 @@ function initEventListeners() {
         clearHistory();
         renderHistoryTable();
       }
-    });
-  }
-
-  // Modal handlers si existen en el DOM
-  if (btnGithubModal && modal) {
-    btnGithubModal.addEventListener('click', () => modal.classList.add('active'));
-    if (btnCloseModal) btnCloseModal.addEventListener('click', () => modal.classList.remove('active'));
-    if (btnCloseModalBottom) btnCloseModalBottom.addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('active');
     });
   }
 
@@ -115,9 +198,6 @@ function initEventListeners() {
   });
 }
 
-let currentChemical = null;
-let currentPdfType = 'ft';
-
 /**
  * Evento al cambiar el producto seleccionado
  */
@@ -129,103 +209,107 @@ function onChemicalChange() {
   const untraceableBanner = document.getElementById('untraceable-banner');
   const resultBox = document.getElementById('result-box');
 
-  const chemical = getChemicalById(select.value);
+  const chemical = select ? getChemicalById(select.value) : null;
   currentChemical = chemical;
 
   updateDocumentButtons(chemical);
 
   if (!chemical) {
-    formulaPreview.classList.add('hidden');
-    untraceableBanner.classList.add('hidden');
-    resultBox.classList.remove('hidden');
+    if (formulaPreview) formulaPreview.classList.add('hidden');
+    if (untraceableBanner) untraceableBanner.classList.add('hidden');
+    if (resultBox) resultBox.classList.remove('hidden');
     updateChart(null);
     return;
   }
 
-  formulaPreview.classList.remove('hidden');
+  if (formulaPreview) formulaPreview.classList.remove('hidden');
 
   if (!chemical.traceable) {
-    formulaText.textContent = 'Carece de trazabilidad metrológica';
-    traceableBadge.textContent = 'Sin Trazabilidad';
-    traceableBadge.className = 'badge badge-danger';
-
-    untraceableBanner.classList.remove('hidden');
-    resultBox.classList.add('hidden');
+    if (formulaText) formulaText.textContent = 'Carece de trazabilidad metrológica';
+    if (traceableBadge) {
+      traceableBadge.textContent = 'Sin Trazabilidad';
+      traceableBadge.className = 'badge badge-danger';
+    }
+    
+    if (untraceableBanner) untraceableBanner.classList.remove('hidden');
+    if (resultBox) resultBox.classList.add('hidden');
     updateChart(null);
   } else {
     const cSign = chemical.c >= 0 ? `+ ${chemical.c}` : `- ${Math.abs(chemical.c)}`;
-    formulaText.textContent = `y = ${chemical.m}x ${cSign}`;
-    traceableBadge.textContent = 'Trazable Metrológicamente';
-    traceableBadge.className = 'badge badge-success';
-
-    untraceableBanner.classList.add('hidden');
-    resultBox.classList.remove('hidden');
+    if (formulaText) formulaText.textContent = `y = ${chemical.m}x ${cSign}`;
+    if (traceableBadge) {
+      traceableBadge.textContent = 'Trazable Metrológicamente';
+      traceableBadge.className = 'badge badge-success';
+    }
+    
+    if (untraceableBanner) untraceableBanner.classList.add('hidden');
+    if (resultBox) resultBox.classList.remove('hidden');
   }
 }
 
 /**
- * Actualiza la visibilidad y estado de los botones de Ficha Técnica y Seguridad
+ * Actualiza los botones de Fichas Técnicas (FT) y Fichas de Seguridad (FDS)
  */
 function updateDocumentButtons(chemical) {
-  const docButtonsContainer = document.getElementById('doc-buttons');
-  const btnFt = document.getElementById('btn-view-ft');
-  const btnFds = document.getElementById('btn-view-fds');
+  const docButtons = document.getElementById('doc-buttons');
+  const btnViewFt = document.getElementById('btn-view-ft');
+  const btnViewFds = document.getElementById('btn-view-fds');
 
-  if (!docButtonsContainer || !btnFt || !btnFds) return;
+  if (!docButtons || !btnViewFt || !btnViewFds) return;
 
   if (!chemical || (!chemical.ft && !chemical.fds)) {
-    docButtonsContainer.classList.add('hidden');
+    docButtons.classList.add('hidden');
     return;
   }
 
-  docButtonsContainer.classList.remove('hidden');
+  docButtons.classList.remove('hidden');
 
-  btnFt.disabled = !chemical.ft;
-  btnFt.style.opacity = chemical.ft ? '1' : '0.4';
+  if (chemical.ft) {
+    btnViewFt.disabled = false;
+    btnViewFt.title = `Ver Ficha Técnica de ${chemical.name}`;
+    btnViewFt.style.opacity = '1';
+  } else {
+    btnViewFt.disabled = true;
+    btnViewFt.title = 'Ficha Técnica no disponible';
+    btnViewFt.style.opacity = '0.5';
+  }
 
-  btnFds.disabled = !chemical.fds;
-  btnFds.style.opacity = chemical.fds ? '1' : '0.4';
+  if (chemical.fds) {
+    btnViewFds.disabled = false;
+    btnViewFds.title = `Ver Ficha de Seguridad de ${chemical.name}`;
+    btnViewFds.style.opacity = '1';
+  } else {
+    btnViewFds.disabled = true;
+    btnViewFds.title = 'Ficha de Seguridad no disponible';
+    btnViewFds.style.opacity = '0.5';
+  }
 }
 
 /**
- * Abre el visor modal de PDF con el tipo de documento especificado ('ft' o 'fds')
+ * Abre el modal del visor de PDF
  */
 function openPdfModal(type) {
-  const select = document.getElementById('chemical-select');
-  const chemical = getChemicalById(select.value);
-  if (!chemical) return;
+  if (!currentChemical) return;
 
-  currentChemical = chemical;
   currentPdfType = type;
-
   const pdfModal = document.getElementById('pdf-modal');
-  if (!pdfModal) return;
 
   renderPdfContent();
-  pdfModal.classList.add('active');
+
+  if (pdfModal) pdfModal.classList.add('active');
 }
 
 /**
- * Cierra el visor de PDF
- */
-function closePdfModal() {
-  const pdfModal = document.getElementById('pdf-modal');
-  const frameEl = document.getElementById('pdf-frame');
-  if (pdfModal) pdfModal.classList.remove('active');
-  if (frameEl) frameEl.src = 'about:blank';
-}
-
-/**
- * Renderiza el documento PDF en el iframe del modal
+ * Renderiza el PDF actual en el modal
  */
 function renderPdfContent() {
   if (!currentChemical) return;
 
+  const pdfFrame = document.getElementById('pdf-frame');
   const titleEl = document.getElementById('pdf-modal-title');
-  const frameEl = document.getElementById('pdf-frame');
-  const openNewtabEl = document.getElementById('pdf-open-newtab');
   const tabFt = document.getElementById('pdf-tab-ft');
   const tabFds = document.getElementById('pdf-tab-fds');
+  const openNewTabLink = document.getElementById('pdf-open-newtab');
 
   const pdfPath = currentPdfType === 'ft' ? currentChemical.ft : currentChemical.fds;
   const docTypeName = currentPdfType === 'ft' ? 'Ficha Técnica' : 'Ficha de Seguridad';
@@ -233,8 +317,8 @@ function renderPdfContent() {
   const isMobile = window.innerWidth <= 640;
   if (titleEl) {
     titleEl.textContent = isMobile
-      ? `${currentChemical.name} (${currentChemical.code})`
-      : `${currentChemical.name} (${currentChemical.code}) - ${docTypeName}`;
+      ? `${currentChemical.brandName} - ${currentChemical.name}`
+      : `${currentChemical.brandName} - ${currentChemical.name} - ${docTypeName}`;
   }
 
   if (tabFt) {
@@ -248,64 +332,109 @@ function renderPdfContent() {
 
   if (pdfPath) {
     const encodedPath = encodeURI(pdfPath);
-    if (frameEl) frameEl.src = encodedPath;
-    if (openNewtabEl) openNewtabEl.href = encodedPath;
+    if (pdfFrame) pdfFrame.src = encodedPath;
+    if (openNewTabLink) openNewTabLink.href = encodedPath;
   } else {
-    if (frameEl) frameEl.src = 'about:blank';
-    if (openNewtabEl) openNewtabEl.href = '#';
+    if (pdfFrame) pdfFrame.src = 'about:blank';
+    if (openNewTabLink) openNewTabLink.href = '#';
   }
 }
 
 /**
- * Intenta hacer el cálculo automáticamente si los inputs son válidos
+ * Cierra el modal de PDF
+ */
+function closePdfModal() {
+  const pdfModal = document.getElementById('pdf-modal');
+  const pdfFrame = document.getElementById('pdf-frame');
+
+  if (pdfModal) pdfModal.classList.remove('active');
+  if (pdfFrame) pdfFrame.src = '';
+}
+
+/**
+ * Cálculo automático al escribir en los inputs de conductividad o concentración
  */
 function autoCalculate() {
   const select = document.getElementById('chemical-select');
-  const chemCondInput = document.getElementById('chem-cond').value;
-  const waterCondInput = document.getElementById('water-cond').value;
+  const chemCondInput = document.getElementById('chem-cond');
+  const targetYInput = document.getElementById('target-y');
+  const waterCondInput = document.getElementById('water-cond');
 
-  const chemical = getChemicalById(select.value);
-  if (!chemical || !chemical.traceable) return;
+  if (!select || !select.value) return;
 
-  const cVal = parseNumber(chemCondInput);
-  const wVal = parseNumber(waterCondInput);
+  const waterVal = waterCondInput ? waterCondInput.value.trim() : '';
 
-  if (!isNaN(cVal) && !isNaN(wVal)) {
-    performCalculation();
+  if (currentMode === 'conc') {
+    const chemVal = chemCondInput ? chemCondInput.value.trim() : '';
+    if (chemVal !== '' && waterVal !== '') {
+      performCalculation();
+    }
+  } else {
+    const targetYVal = targetYInput ? targetYInput.value.trim() : '';
+    if (targetYVal !== '' && waterVal !== '') {
+      performCalculation();
+    }
   }
 }
 
 /**
- * Ejecuta el cálculo principal y actualiza la UI
+ * Ejecuta el cálculo según el modo activo y actualiza la UI
  */
 function performCalculation() {
   const select = document.getElementById('chemical-select');
-  const chemCondInput = document.getElementById('chem-cond').value;
-  const waterCondInput = document.getElementById('water-cond').value;
+  const chemCondInput = document.getElementById('chem-cond');
+  const targetYInput = document.getElementById('target-y');
+  const waterCondInput = document.getElementById('water-cond');
 
-  const chemical = getChemicalById(select.value);
-  const result = calculateConcentration(chemical, chemCondInput, waterCondInput);
+  const chemicalId = select ? select.value : '';
+  const waterCondStr = waterCondInput ? waterCondInput.value : '';
+
+  let result = null;
+
+  if (currentMode === 'conc') {
+    const chemCondStr = chemCondInput ? chemCondInput.value : '';
+    result = calculateConcentration(chemicalId, chemCondStr, waterCondStr);
+  } else {
+    const targetYStr = targetYInput ? targetYInput.value : '';
+    result = calculateConductivity(chemicalId, targetYStr, waterCondStr);
+  }
 
   const resultYValue = document.getElementById('result-y-value');
+  const resultSubDetail = document.getElementById('result-sub-detail');
   const warningText = document.getElementById('warning-text');
 
-  if (!result.success) {
-    if (!result.isNotTraceable) {
-      resultYValue.textContent = '--';
-      warningText.classList.add('hidden');
+  if (!result || !result.success) {
+    if (!result || !result.isNotTraceable) {
+      if (resultYValue) resultYValue.textContent = '--';
+      if (resultSubDetail) resultSubDetail.classList.add('hidden');
+      if (warningText) warningText.classList.add('hidden');
     }
     updateChart(null);
     return result;
   }
 
   // Actualizar UI del Resultado
-  resultYValue.textContent = formatSpanishNumber(result.y, 6);
+  if (currentMode === 'conc') {
+    if (resultYValue) resultYValue.textContent = formatSpanishNumber(result.y, 6);
+    if (resultSubDetail) {
+      resultSubDetail.textContent = `Conductividad Neta Medida (x): ${formatSpanishNumber(result.x, 4)} mS/cm`;
+      resultSubDetail.classList.remove('hidden');
+    }
+  } else {
+    if (resultYValue) resultYValue.textContent = formatSpanishNumber(result.chemCond, 4);
+    if (resultSubDetail) {
+      resultSubDetail.textContent = `Conductividad Neta Requerida (x): ${formatSpanishNumber(result.x, 4)} mS/cm`;
+      resultSubDetail.classList.remove('hidden');
+    }
+  }
 
   if (result.warning) {
-    warningText.textContent = result.warning;
-    warningText.classList.remove('hidden');
+    if (warningText) {
+      warningText.textContent = result.warning;
+      warningText.classList.remove('hidden');
+    }
   } else {
-    warningText.classList.add('hidden');
+    if (warningText) warningText.classList.add('hidden');
   }
 
   // Actualizar Gráfica
@@ -315,22 +444,26 @@ function performCalculation() {
 }
 
 /**
- * Inicializa la gráfica con Chart.js
+ * Inicializa el gráfico de la recta de calibración con Chart.js
  */
 function initChart() {
-  const ctx = document.getElementById('calibration-chart').getContext('2d');
+  const canvas = document.getElementById('calibration-chart');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
       datasets: [
         {
-          label: 'Curva de Calibración y = mx + c',
+          label: 'Recta de Calibración',
           data: [],
           borderColor: '#00f2fe',
           borderWidth: 2,
           pointRadius: 0,
-          tension: 0,
-          fill: false
+          fill: false,
+          tension: 0
         },
         {
           label: 'Punto Medido (x, y)',
@@ -338,9 +471,9 @@ function initChart() {
           backgroundColor: '#ef4444',
           borderColor: '#ffffff',
           borderWidth: 2,
-          pointRadius: 7,
-          pointHoverRadius: 9,
-          type: 'scatter'
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          showLine: false
         }
       ]
     },
@@ -354,34 +487,26 @@ function initChart() {
           title: {
             display: true,
             text: 'Conductividad Neta x (mS/cm)',
-            color: '#9ca3af'
+            color: '#9ca3af',
+            font: { size: 12, weight: '500' }
           },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.05)'
-          },
-          ticks: {
-            color: '#9ca3af'
-          }
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          ticks: { color: '#9ca3af' }
         },
         y: {
           title: {
             display: true,
             text: 'Concentración y',
-            color: '#9ca3af'
+            color: '#9ca3af',
+            font: { size: 12, weight: '500' }
           },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.05)'
-          },
-          ticks: {
-            color: '#9ca3af'
-          }
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          ticks: { color: '#9ca3af' }
         }
       },
       plugins: {
         legend: {
-          labels: {
-            color: '#f3f4f6'
-          }
+          labels: { color: '#e2e8f0', font: { size: 12 } }
         },
         tooltip: {
           callbacks: {
@@ -408,33 +533,40 @@ function updateChart(result) {
     return;
   }
 
-  const { m, c, x, y } = result;
-  const maxX = Math.max(10, Math.ceil(x > 0 ? x * 1.5 : 10));
+  const m = result.chemical.m;
+  const c = result.chemical.c;
 
   // Generar puntos de la recta
+  const xMax = Math.max(10, Math.ceil(result.x * 1.25));
   const linePoints = [
     { x: 0, y: c },
-    { x: maxX, y: m * maxX + c }
+    { x: xMax, y: m * xMax + c }
   ];
 
-  chartInstance.data.datasets[0].label = `Recta ${result.chemical.name}: y = ${m}x ${c >= 0 ? '+' : ''}${c}`;
+  const currentPoint = [
+    { x: result.x, y: result.y }
+  ];
+
+  chartInstance.data.datasets[0].label = `Recta ${result.chemical.brandName} - ${result.chemical.name}: y = ${m}x ${c >= 0 ? '+' : ''}${c}`;
   chartInstance.data.datasets[0].data = linePoints;
-  chartInstance.data.datasets[1].data = [{ x, y }];
+  chartInstance.data.datasets[1].data = currentPoint;
 
   chartInstance.update();
 }
 
 /**
- * Dibuja la tabla del historial de mediciones
+ * Renderiza la tabla con el historial de mediciones
  */
 function renderHistoryTable() {
   const tbody = document.getElementById('history-tbody');
+  if (!tbody) return;
+
   const history = getHistory();
 
   if (history.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="7" style="text-align: center; color: var(--text-dim); padding: 1.5rem;">
+        <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 1.5rem;">
           No hay mediciones guardadas aún.
         </td>
       </tr>
@@ -451,6 +583,7 @@ function renderHistoryTable() {
     return `
       <tr>
         <td style="color: var(--text-muted);">${dateStr}</td>
+        <td style="color: var(--text-muted); font-weight: 500;">${item.brandName || '-'}</td>
         <td><strong style="color: var(--accent-cyan);">${item.chemicalName}</strong></td>
         <td>${formatSpanishNumber(item.chemCond, 4)}</td>
         <td>${formatSpanishNumber(item.waterCond, 4)}</td>
@@ -466,13 +599,34 @@ function renderHistoryTable() {
  * Resetea el formulario y los resultados
  */
 function resetForm() {
-  document.getElementById('chemical-select').value = '';
-  document.getElementById('chem-cond').value = '';
-  document.getElementById('water-cond').value = '';
-  document.getElementById('result-y-value').textContent = '--';
-  document.getElementById('warning-text').classList.add('hidden');
-  document.getElementById('formula-preview').classList.add('hidden');
-  document.getElementById('untraceable-banner').classList.add('hidden');
-  document.getElementById('result-box').classList.remove('hidden');
+  const brandSelect = document.getElementById('brand-select');
+  const chemSelect = document.getElementById('chemical-select');
+  const chemCondInput = document.getElementById('chem-cond');
+  const targetYInput = document.getElementById('target-y');
+  const waterCondInput = document.getElementById('water-cond');
+  const resultYValue = document.getElementById('result-y-value');
+  const resultSubDetail = document.getElementById('result-sub-detail');
+  const warningText = document.getElementById('warning-text');
+  const formulaPreview = document.getElementById('formula-preview');
+  const untraceableBanner = document.getElementById('untraceable-banner');
+  const resultBox = document.getElementById('result-box');
+
+  if (brandSelect) brandSelect.value = '';
+  if (chemSelect) {
+    chemSelect.value = '';
+    chemSelect.disabled = true;
+    chemSelect.innerHTML = '<option value="">-- Seleccionar marca primero --</option>';
+  }
+
+  if (chemCondInput) chemCondInput.value = '';
+  if (targetYInput) targetYInput.value = '';
+  if (waterCondInput) waterCondInput.value = '';
+  if (resultYValue) resultYValue.textContent = '--';
+  if (resultSubDetail) resultSubDetail.classList.add('hidden');
+  if (warningText) warningText.classList.add('hidden');
+  if (formulaPreview) formulaPreview.classList.add('hidden');
+  if (untraceableBanner) untraceableBanner.classList.add('hidden');
+  if (resultBox) resultBox.classList.remove('hidden');
+
   updateChart(null);
 }

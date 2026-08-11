@@ -1,6 +1,4 @@
-/**
- * Módulo de cálculo para la concentración de químicos por conductividad.
- */
+import { getChemicalById } from './data.js';
 
 /**
  * Convierte un texto con número (aceptando comas o puntos) a float válido.
@@ -32,16 +30,18 @@ export function formatSpanishNumber(num, decimals = 4) {
 
 /**
  * Calcula la concentración del químico dada la información del químico y las conductividades.
- * @param {object} chemical Objeto químico de CHEMICAL_DATA
- * @param {number|string} chemCond Conductividad del químico en mS/cm
- * @param {number|string} waterCond Conductividad del agua en mS/cm
- * @returns {object} Resultado del cálculo y desglose
+ * @param {object|string} chemicalOrId Objeto químico o ID de producto
+ * @param {number|string} chemCondInput Conductividad del producto en mS/cm
+ * @param {number|string} waterCondInput Conductividad del agua en mS/cm
+ * @returns {object} Resultado del cálculo
  */
-export function calculateConcentration(chemical, chemCondInput, waterCondInput) {
+export function calculateConcentration(chemicalOrId, chemCondInput, waterCondInput) {
+  const chemical = typeof chemicalOrId === 'string' ? getChemicalById(chemicalOrId) : chemicalOrId;
+
   if (!chemical) {
     return {
       success: false,
-      error: 'Debe seleccionar un producto químico válido.'
+      error: 'Debe seleccionar un producto válido.'
     };
   }
 
@@ -111,6 +111,102 @@ export function calculateConcentration(chemical, chemCondInput, waterCondInput) 
     step1Str,
     step2Str,
     step3Str,
-    warning
+    warning,
+    mode: 'conc'
+  };
+}
+
+/**
+ * Calcula la conductividad esperada del producto dada la concentración deseada y la conductividad del agua.
+ * @param {object|string} chemicalOrId Objeto químico o ID de producto
+ * @param {number|string} targetYInput Concentración deseada (y)
+ * @param {number|string} waterCondInput Conductividad del agua en mS/cm
+ * @returns {object} Resultado del cálculo
+ */
+export function calculateConductivity(chemicalOrId, targetYInput, waterCondInput) {
+  const chemical = typeof chemicalOrId === 'string' ? getChemicalById(chemicalOrId) : chemicalOrId;
+
+  if (!chemical) {
+    return {
+      success: false,
+      error: 'Debe seleccionar un producto válido.'
+    };
+  }
+
+  if (!chemical.traceable) {
+    return {
+      success: false,
+      isNotTraceable: true,
+      error: `El químico ${chemical.name} CARECE DE TRAZABILIDAD METROLÓGICA. No se puede calcular la conductividad.`,
+      chemical
+    };
+  }
+
+  const y = parseNumber(targetYInput);
+  const waterCond = parseNumber(waterCondInput);
+
+  if (isNaN(y)) {
+    return {
+      success: false,
+      error: 'Por favor, introduzca un valor numérico válido para la concentración deseada.',
+      chemical
+    };
+  }
+
+  if (isNaN(waterCond)) {
+    return {
+      success: false,
+      error: 'Por favor, introduzca un valor numérico válido para la conductividad del agua.',
+      chemical
+    };
+  }
+
+  if (waterCond < 0) {
+    return {
+      success: false,
+      error: 'La conductividad del agua no puede ser negativa.',
+      chemical
+    };
+  }
+
+  const { m, c } = chemical;
+  if (!m || m === 0) {
+    return {
+      success: false,
+      error: 'Error matemático: El parámetro m no puede ser cero.',
+      chemical
+    };
+  }
+
+  // y = m * x + c  =>  x = (y - c) / m
+  const x = (y - c) / m;
+
+  // Cond. Producto = x + Cond. Agua
+  const chemCond = x + waterCond;
+
+  const warning = x < 0 ? 'Atención: La concentración deseada requiere una conductividad neta negativa (x < 0).' : null;
+
+  const cSign = c >= 0 ? `+ ${formatSpanishNumber(c, 4)}` : `- ${formatSpanishNumber(Math.abs(c), 4)}`;
+  const formulaStr = `x = (y ${c >= 0 ? '-' : '+'} ${formatSpanishNumber(Math.abs(c), 4)}) / ${formatSpanishNumber(m, 4)}`;
+
+  const step1Str = `x = (${formatSpanishNumber(y, 4)} - ${formatSpanishNumber(c, 4)}) / ${formatSpanishNumber(m, 4)} = ${formatSpanishNumber(x, 4)} mS/cm`;
+  const step2Str = `Conductividad Producto = ${formatSpanishNumber(x, 4)} + ${formatSpanishNumber(waterCond, 4)}`;
+  const step3Str = `Conductividad Estimada = ${formatSpanishNumber(chemCond, 4)} mS/cm`;
+
+  return {
+    success: true,
+    chemical,
+    chemCond,
+    waterCond,
+    x,
+    y,
+    m,
+    c,
+    formulaStr,
+    step1Str,
+    step2Str,
+    step3Str,
+    warning,
+    mode: 'cond'
   };
 }
