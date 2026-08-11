@@ -7,6 +7,12 @@
   <title>Tesiscalc</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00f2fe">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tesiscalc">
   <meta name="description"
     content="Calculadora científica interactiva para obtener la concentración de productos restando la conductividad del agua base y aplicando la fórmula de calibración.">
   <link rel="stylesheet" href="css/styles.css">
@@ -30,11 +36,20 @@
     </div>
 
     <div class="nav-actions">
+      <button id="btn-install-pwa" class="btn btn-secondary hidden" title="Instalar Tesiscalc en este dispositivo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+        </svg>
+        <span class="btn-text btn-text-full">Instalar App</span>
+        <span class="btn-text btn-text-short">Instalar</span>
+      </button>
       <button id="btn-export-top" class="btn btn-primary" title="Exportar historial en CSV">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path>
         </svg>
-        Exportar Historial
+        <span class="btn-text btn-text-full">Exportar Historial</span>
+        <span class="btn-text btn-text-short">Exportar</span>
       </button>
     </div>
   </nav>
@@ -60,10 +75,12 @@
           <!-- Selector de Modo de Cálculo -->
           <div class="mode-tabs">
             <button type="button" id="tab-mode-conc" class="mode-tab active">
-              🧪 Calcular Concentración (y)
+              <span class="tab-text-full">🧪 Calcular Concentración (y)</span>
+              <span class="tab-text-short">🧪 Concentración (y)</span>
             </button>
             <button type="button" id="tab-mode-cond" class="mode-tab">
-              ⚡ Calcular Conductividad (x)
+              <span class="tab-text-full">⚡ Calcular Conductividad (x)</span>
+              <span class="tab-text-short">⚡ Conductividad (x)</span>
             </button>
           </div>
 

@@ -7,13 +7,52 @@ let chartInstance = null;
 let currentChemical = null;
 let currentPdfType = 'ft';
 let currentMode = 'conc'; // 'conc' (Directo) | 'cond' (Inverso)
+let deferredPrompt = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   initBrandSelect();
   initEventListeners();
   renderHistoryTable();
   initChart();
+  initPWA();
 });
+
+/**
+ * Inicializa el Service Worker y la gestión de instalación PWA
+ */
+function initPWA() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('[PWA] Service Worker registrado:', reg.scope))
+        .catch((err) => console.error('[PWA] Error al registrar Service Worker:', err));
+    });
+  }
+
+  const btnInstall = document.getElementById('btn-install-pwa');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (btnInstall) btnInstall.classList.remove('hidden');
+  });
+
+  if (btnInstall) {
+    btnInstall.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`[PWA] Respuesta del usuario: ${outcome}`);
+      deferredPrompt = null;
+      btnInstall.classList.add('hidden');
+    });
+  }
+
+  window.addEventListener('appinstalled', () => {
+    console.log('[PWA] La app Tesiscalc fue instalada correctamente.');
+    if (btnInstall) btnInstall.classList.add('hidden');
+  });
+}
 
 /**
  * Inicializa la lista desplegable de Marcas

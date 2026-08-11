@@ -792,8 +792,69 @@ body {
   border: 1px solid var(--border-color);
 }
 
+/* Text Shortening for Responsive Buttons */
+.btn-text-short,
+.tab-text-short {
+  display: none !important;
+}
+
+.btn-text-full,
+.tab-text-full {
+  display: inline !important;
+}
+
 /* Media Queries para Pantallas Pequeñas y Móviles */
 @media (max-width: 768px) {
+  .btn-text-full,
+  .tab-text-full {
+    display: none !important;
+  }
+
+  .btn-text-short,
+  .tab-text-short {
+    display: inline !important;
+  }
+
+  .navbar {
+    padding: 0.6rem 0.75rem !important;
+  }
+
+  .nav-actions {
+    gap: 0.35rem !important;
+  }
+
+  .nav-actions .btn {
+    padding: 0.35rem 0.55rem !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+  }
+
+  .nav-actions .btn svg {
+    width: 15px !important;
+    height: 15px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mode-tab {
+    padding: 0.4rem 0.25rem !important;
+    font-size: 0.73rem !important;
+    white-space: nowrap !important;
+  }
+
+  .brand-title {
+    font-size: 1.05rem !important;
+  }
+
+  .brand-icon {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .brand-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
   .modal-overlay {
     padding: 0.35rem !important;
   }
@@ -828,6 +889,18 @@ body {
 
   .pdf-open-btn {
     padding: 0.35rem 0.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-actions .btn {
+    padding: 0.3rem 0.4rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  .nav-actions .btn svg {
+    width: 13px !important;
+    height: 13px !important;
   }
 }
 
