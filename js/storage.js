@@ -66,8 +66,8 @@ export function exportToCSV() {
   const history = getHistory();
   if (history.length === 0) return false;
 
-  const headers = ['Fecha y Hora', 'Químico', 'Conductividad Químico (mS/cm)', 'Conductividad Agua (mS/cm)', 'Conductividad Neta x (mS/cm)', 'Concentración y', 'Fórmula'];
-  
+  const headers = ['Fecha y Hora', 'Producto', 'Conductividad Producto (mS/cm)', 'Conductividad Agua (mS/cm)', 'Conductividad Neta x (mS/cm)', 'Concentración y', 'Fórmula'];
+
   const rows = history.map(item => [
     `"${new Date(item.timestamp).toLocaleString('es-ES')}"`,
     `"${item.chemicalName}"`,
@@ -81,7 +81,7 @@ export function exportToCSV() {
   const csvContent = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-  
+
   const a = document.createElement('a');
   a.href = url;
   a.download = `historial_calculos_quimicos_${new Date().toISOString().slice(0, 10)}.csv`;

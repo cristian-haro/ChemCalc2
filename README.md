@@ -1,6 +1,6 @@
 # Tesiscalc - Calculadora de Concentración Química por Conductividad
 
-**Tesiscalc** es una aplicación web científica moderna e interactiva diseñada para calcular la concentración ($y$) de productos químicos en laboratorios e industria a partir de lecturas de conductividad del producto ($mS/cm$) y del agua base a restar ($x = \text{Cond}_{\text{químico}} - \text{Cond}_{\text{agua}}$).
+**Tesiscalc** es una aplicación web científica moderna e interactiva diseñada para calcular la concentración ($y$) de productos en laboratorios e industria a partir de lecturas de conductividad del producto ($mS/cm$) y del agua base a restar ($x = \text{Cond}_{\text{químico}} - \text{Cond}_{\text{agua}}$).
 
 ---
 
@@ -33,7 +33,7 @@
 ## Ejemplo Práctico
 
 Si se selecciona el producto **`I-202-A`** con la fórmula $y = 0,0546x - 0,1998$:
-1. **Medida del químico**: $4,25\text{ mS/cm}$
+1. **Medida del producto**: $4,25\text{ mS/cm}$
 2. **Medida del agua**: $0,34\text{ mS/cm}$
 3. **Cálculo de $x$**: $x = 4,25 - 0,34 = 3,91\text{ mS/cm}$
 4. **Sustitución en la ecuación**:

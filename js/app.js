@@ -14,16 +14,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * Rena la lista desplegable de químicos
+ * Rena la lista desplegable de productos
  */
 function initChemicalSelect() {
   const select = document.getElementById('chemical-select');
-  select.innerHTML = '<option value="">-- Seleccionar producto químico --</option>';
+  select.innerHTML = '<option value="">-- Seleccionar producto --</option>';
 
   CHEMICAL_DATA.forEach(chem => {
     const opt = document.createElement('option');
     opt.value = chem.id;
-    opt.textContent = chem.traceable 
+    opt.textContent = chem.traceable
       ? `${chem.name} (Ref: ${chem.code})`
       : `${chem.name} (Ref: ${chem.code}) - [SIN TRAZABILIDAD]`;
     select.appendChild(opt);
@@ -119,7 +119,7 @@ let currentChemical = null;
 let currentPdfType = 'ft';
 
 /**
- * Evento al cambiar el producto químico seleccionado
+ * Evento al cambiar el producto seleccionado
  */
 function onChemicalChange() {
   const select = document.getElementById('chemical-select');
@@ -148,7 +148,7 @@ function onChemicalChange() {
     formulaText.textContent = 'Carece de trazabilidad metrológica';
     traceableBadge.textContent = 'Sin Trazabilidad';
     traceableBadge.className = 'badge badge-danger';
-    
+
     untraceableBanner.classList.remove('hidden');
     resultBox.classList.add('hidden');
     updateChart(null);
@@ -157,7 +157,7 @@ function onChemicalChange() {
     formulaText.textContent = `y = ${chemical.m}x ${cSign}`;
     traceableBadge.textContent = 'Trazable Metrológicamente';
     traceableBadge.className = 'badge badge-success';
-    
+
     untraceableBanner.classList.add('hidden');
     resultBox.classList.remove('hidden');
   }
@@ -232,8 +232,8 @@ function renderPdfContent() {
 
   const isMobile = window.innerWidth <= 640;
   if (titleEl) {
-    titleEl.textContent = isMobile 
-      ? `${currentChemical.name} (${currentChemical.code})` 
+    titleEl.textContent = isMobile
+      ? `${currentChemical.name} (${currentChemical.code})`
       : `${currentChemical.name} (${currentChemical.code}) - ${docTypeName}`;
   }
 
@@ -385,7 +385,7 @@ function initChart() {
         },
         tooltip: {
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               return `x: ${context.parsed.x.toFixed(4)}, y: ${context.parsed.y.toFixed(4)}`;
             }
           }
@@ -396,7 +396,7 @@ function initChart() {
 }
 
 /**
- * Actualiza los datos de la gráfica con el químico y el cálculo actual
+ * Actualiza los datos de la gráfica con el Producto y el cálculo actual
  */
 function updateChart(result) {
   if (!chartInstance) return;
