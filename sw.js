@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tesiscalc-v11';
+const CACHE_NAME = 'tesiscalc-v13';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const ASSETS_TO_CACHE = [
   './assets/gute-logo.png',
   './assets/iberklin-logo.png',
   './assets/tesis-logo.png',
+  './assets/tesiscalc-logo.png',
   'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
