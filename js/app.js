@@ -235,6 +235,22 @@ function initEventListeners() {
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePdfModal();
   });
+
+  // Gestor del botón de comenzar en la pantalla de bienvenida
+  const btnStart = document.getElementById('btn-start');
+  const welcomeScreen = document.getElementById('welcome-screen');
+  const appScreen = document.getElementById('app-screen');
+
+  if (btnStart && welcomeScreen && appScreen) {
+    btnStart.addEventListener('click', () => {
+      welcomeScreen.classList.add('fade-out');
+      setTimeout(() => {
+        welcomeScreen.classList.add('hidden');
+        appScreen.classList.remove('hidden');
+        appScreen.classList.add('fade-in-app');
+      }, 500);
+    });
+  }
 }
 
 /**
@@ -498,7 +514,7 @@ function initChart() {
         {
           label: 'Recta de Calibración',
           data: [],
-          borderColor: '#00f2fe',
+          borderColor: '#0072ff',
           borderWidth: 2,
           pointRadius: 0,
           fill: false,
@@ -526,26 +542,26 @@ function initChart() {
           title: {
             display: true,
             text: 'Conductividad Neta x (mS/cm)',
-            color: '#9ca3af',
+            color: '#475569',
             font: { size: 12, weight: '500' }
           },
-          grid: { color: 'rgba(255, 255, 255, 0.05)' },
-          ticks: { color: '#9ca3af' }
+          grid: { color: 'rgba(0, 86, 179, 0.08)' },
+          ticks: { color: '#475569' }
         },
         y: {
           title: {
             display: true,
             text: 'Concentración y',
-            color: '#9ca3af',
+            color: '#475569',
             font: { size: 12, weight: '500' }
           },
-          grid: { color: 'rgba(255, 255, 255, 0.05)' },
-          ticks: { color: '#9ca3af' }
+          grid: { color: 'rgba(0, 86, 179, 0.08)' },
+          ticks: { color: '#475569' }
         }
       },
       plugins: {
         legend: {
-          labels: { color: '#e2e8f0', font: { size: 12 } }
+          labels: { color: '#1e293b', font: { size: 12 } }
         },
         tooltip: {
           callbacks: {

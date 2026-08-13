@@ -4,8 +4,8 @@
   "description": "Calculadora metrológica de concentración y conductividad por curvas de calibración para productos químicos.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#00f2fe",
+  "background_color": "#ffffff",
+  "theme_color": "#0072ff",
   "orientation": "any",
   "icons": [
     {
