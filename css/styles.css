@@ -908,3 +908,71 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* Ocultar gráfica y fórmula de calibración según requerimiento */
+#formula-preview,
+.chart-container {
+  display: none !important;
+}
+
+/* Nuevo layout de calculadora unificada */
+.calculator-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2.5rem;
+}
+
+.calc-inputs-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.calc-results-pane {
+  border-left: 1px solid var(--border-color);
+  padding-left: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.results-content-wrapper {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.pane-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pane-title svg {
+  color: var(--accent-cyan);
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 992px) {
+  .calculator-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .calc-results-pane {
+    border-left: none !important;
+    padding-left: 0 !important;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+  }
+}

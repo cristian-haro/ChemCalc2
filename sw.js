@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tesiscalc-v2';
+const CACHE_NAME = 'tesiscalc-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

@@ -261,7 +261,7 @@ function onChemicalChange() {
     return;
   }
 
-  if (formulaPreview) formulaPreview.classList.remove('hidden');
+  // if (formulaPreview) formulaPreview.classList.remove('hidden');
 
   if (!chemical.traceable) {
     if (formulaText) formulaText.textContent = 'Carece de trazabilidad metrológica';
