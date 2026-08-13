@@ -51,6 +51,11 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-y: auto;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
@@ -64,11 +69,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-y: visible;
 }
 
 /* Header Navbar */
 .navbar {
-  background: rgba(255, 255, 255, 0.85);
+  /*background: rgba(255, 255, 255, 0.85);*/
   backdrop-filter: var(--glass-backdrop);
   border-bottom: 1px solid var(--border-color);
   padding: 1rem 2rem;
@@ -160,7 +166,8 @@ body {
 }
 
 .btn-secondary {
-  background: rgba(0, 86, 179, 0.05);
+  /* background: rgba(0, 86, 179, 0.05);*/
+  background: rgb(255 255 255);
   color: #0056b3;
   border: 1px solid rgba(0, 86, 179, 0.2);
 }
@@ -233,7 +240,7 @@ body {
 /* Main Container Layout */
 .container {
   max-width: 1280px;
-  margin: 2rem auto;
+  margin: 2.5rem auto;
   padding: 0 1.5rem;
   width: 100%;
   flex: 1;
@@ -679,7 +686,7 @@ body {
 
 /* Footer */
 .footer {
-  margin-top: 3rem;
+  /*margin-top: 3rem;*/
   padding: 1.5rem;
   border-top: 1px solid var(--border-color);
   text-align: center;
@@ -818,6 +825,7 @@ body {
 
 /* Media Queries para Pantallas Pequeñas y Móviles */
 @media (max-width: 768px) {
+
   .btn-text-full,
   .tab-text-full {
     display: none !important;
@@ -982,6 +990,7 @@ body {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
+
   .calc-results-pane {
     border-left: none !important;
     padding-left: 0 !important;
@@ -1172,7 +1181,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  /* overflow-x: hidden;*/
 }
 
 #app-screen.hidden {
@@ -1190,6 +1199,7 @@ body {
     opacity: 0;
     transform: translateY(15px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1201,22 +1211,27 @@ body {
   .welcome-logo {
     max-width: 200px;
   }
+
   .btn-comenzar {
     padding: 0.9rem 2.8rem;
     font-size: 1.15rem;
   }
+
   .partner-logo {
     height: 50px;
     width: 110px;
   }
+
   .vertical-divider {
     height: 40px;
   }
 }
+
 @media (max-width: 480px) {
   .welcome-footer-logos {
     gap: 1.25rem;
   }
+
   .partner-logo {
     width: 105px;
   }

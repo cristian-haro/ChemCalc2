@@ -30,6 +30,11 @@ function initPWA() {
   }
 
   const btnInstall = document.getElementById('btn-install-pwa');
+  const iosModal = document.getElementById('ios-install-modal');
+  const btnCloseIosModal = document.getElementById('btn-close-ios-modal');
+
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isStandalone = window.navigator.standalone === true;
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -37,14 +42,29 @@ function initPWA() {
     if (btnInstall) btnInstall.classList.remove('hidden');
   });
 
+  // Mostrar el botón en iOS si no está ya instalado en pantalla de inicio
+  if (isIOS && !isStandalone) {
+    if (btnInstall) btnInstall.classList.remove('hidden');
+  }
+
   if (btnInstall) {
     btnInstall.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log(`[PWA] Respuesta del usuario: ${outcome}`);
-      deferredPrompt = null;
-      btnInstall.classList.add('hidden');
+      if (isIOS) {
+        if (iosModal) iosModal.classList.add('active');
+      } else {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`[PWA] Respuesta del usuario: ${outcome}`);
+        deferredPrompt = null;
+        btnInstall.classList.add('hidden');
+      }
+    });
+  }
+
+  if (btnCloseIosModal && iosModal) {
+    btnCloseIosModal.addEventListener('click', () => {
+      iosModal.classList.remove('active');
     });
   }
 

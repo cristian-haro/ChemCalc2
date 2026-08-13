@@ -414,6 +414,29 @@
     </div>
   </div>
 
+  <!-- Modal Instrucciones de Instalación iOS -->
+  <div id="ios-install-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 420px; text-align: center; padding: 2rem;">
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem;">
+        Instalar en iOS
+      </h3>
+      <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.5;">
+        Para instalar esta aplicación en tu iPhone o iPad, sigue estos sencillos pasos:
+      </p>
+      <div style="text-align: left; background: rgba(0, 86, 179, 0.04); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.5rem; font-size: 0.9rem; border: 1px solid rgba(0, 86, 179, 0.08); color: var(--text-main);">
+        <p style="margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 0.5rem;">
+          <strong style="color: var(--accent-blue);">1.</strong>
+          <span>Pulsa el botón de <strong>Compartir</strong> (Share) <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; display: inline-block; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> en la barra de Safari.</span>
+        </p>
+        <p style="display: flex; align-items: flex-start; gap: 0.5rem;">
+          <strong style="color: var(--accent-blue);">2.</strong>
+          <span>Desplázate hacia abajo y selecciona <strong>"Añadir a la pantalla de inicio"</strong>.</span>
+        </p>
+      </div>
+      <button type="button" id="btn-close-ios-modal" class="btn btn-primary" style="width: 100%; justify-content: center;">Entendido</button>
+    </div>
+  </div>
+
   <!-- Script principal de la aplicación -->
   <script type="module" src="js/app.js"></script>
 </body>
